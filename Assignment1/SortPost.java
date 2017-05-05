@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class SortPost {
+	
 	String filename_in;
 	String filename_out;
 	int M; //size of chunk to sort in number of lines, also the size of a sorted sublist
@@ -13,7 +14,6 @@ public class SortPost {
 	int c; //sort column
 	String sep; //column separator
 	String tmpfileprefix = "tmpfile";
-	
 	int numChunks = 0;
 	
 	public SortPost(String filename_in, String filename_out, int M, int B, int c, String sep) {
@@ -28,18 +28,30 @@ public class SortPost {
 	}
 	
 	public void doSort() throws Exception {
+		
 		//Phase 1
 		long startTime = System.currentTimeMillis();
 		System.out.println("Phase 1 started");
 		BufferedReader in = new BufferedReader( new FileReader(filename_in) );
-        
         int cnt = 0;
         String[] chunk = new String[M];
-        
-        //TODO: Read chunks of M lines from the file, sort, then save them as temp files
+		
+		//TODO: Read chunks of M lines from the file, sort, then save them as temp files
         //tmpfile0, tmpfile1, ... (these are what we call "sorted sublists")
         //update numChunks appropriately.
-        
+		String line;
+		int counter = 0;
+		while ((line = in.readLine()) != null && counter < M) {
+			chunk[counter] = line;
+			if (counter == M-1) {
+				sortAndSaveChunk(chunk, tmpfileprefix + cnt + ".txt");
+				counter = -1;
+				cnt++;
+				numChunks++;
+			}
+			counter++;
+		}
+		System.out.println("numChunks is " + numChunks);
         in.close();
 		System.out.println("Phase 1 Time elapsed (sec) = " + (System.currentTimeMillis() - startTime) / 1000.0);
         
@@ -141,7 +153,12 @@ public class SortPost {
 		
 		//taxpayers_30.txt is a file containing only 30 records. 
 		//This is to make sure your program works correctly. 
-		Sort mysort = new Sort("taxpayers_30.txt", "taxpayers_30_sorted.txt", 10, 8192, 0, "\t");
+		
+		//Testing chunks of 10 and sorting by column 0 (SIN)
+		//SortPost mysort = new SortPost("taxpayers_30.txt", "taxpayers_30_sorted.txt", 10, 8192, 0, "\t");
+		
+		// Testing chunks of 5 and sorting by column 3 (income)
+		SortPost mysort = new SortPost("taxpayers_30.txt", "taxpayers_30_sorted.txt", 5, 8192, 3, "\t");
 		
 		/*
 		//Only do this when you are sure the program works fine.

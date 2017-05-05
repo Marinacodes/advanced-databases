@@ -20,8 +20,8 @@ public class GenerateData {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int N = 3_000_000; //number of rows to generate
-		BufferedWriter out = new BufferedWriter( new FileWriter("taxpayers_3M.txt") );
+		int N = 5; //number of rows to generate
+		BufferedWriter out = new BufferedWriter( new FileWriter("taxpayers_5.txt") );
 		
 		BufferedReader in_first = new BufferedReader( new FileReader("popular-first.txt") );
 		BufferedReader in_last  = new BufferedReader( new FileReader("popular-last.txt") );
