@@ -32,8 +32,10 @@ public class SortPost {
 		//Phase 1
 		long startTime = System.currentTimeMillis();
 		System.out.println("Phase 1 started");
+		
 		BufferedReader in = new BufferedReader( new FileReader(filename_in) );
-        int cnt = 0;
+        
+		int cnt = 0;
         String[] chunk = new String[M];
 		
 		//TODO: Read chunks of M lines from the file, sort, then save them as temp files
@@ -41,6 +43,7 @@ public class SortPost {
         //update numChunks appropriately.
 		String line;
 		int counter = 0;
+		
 		while ((line = in.readLine()) != null && counter < M) {
 			chunk[counter] = line;
 			if (counter == M-1) {
@@ -51,11 +54,13 @@ public class SortPost {
 			}
 			counter++;
 		}
+		//This line for testing only
 		System.out.println("numChunks is " + numChunks);
-        in.close();
+        
+		in.close();
+		
 		System.out.println("Phase 1 Time elapsed (sec) = " + (System.currentTimeMillis() - startTime) / 1000.0);
-        
-        
+                
         //Phase 2
 		startTime = System.currentTimeMillis();
         System.out.println("Phase 2 started");
@@ -87,15 +92,15 @@ public class SortPost {
 		PriorityQueue<HeadIndexPair> heads = 
 				new PriorityQueue<>(numChunks, (a,b) -> compare(a.head,b.head));
 		
-		for(int i=0; i<numChunks; i++)
-			readers[i] = new BufferedReader( new FileReader(tmpfileprefix+i), B );
+		for (int i = 0; i < numChunks; i++)
+			readers[i] = new BufferedReader( new FileReader(tmpfileprefix + i), B );
 		
 		BufferedWriter out = new BufferedWriter( new FileWriter(filename_out), B );
 		
-		for(int i=0; i<numChunks; i++)
+		for (int i = 0; i < numChunks; i++)
 			heads.add( new HeadIndexPair(readers[i].readLine(), i) ); 
 		
-		while(true) {
+		while (true) {
 			HeadIndexPair minh = heads.poll();
 			
 			//TODO: Complete the merge phase
@@ -103,11 +108,10 @@ public class SortPost {
 			//so time to break from this while loop.
 			//Otherwise, add head to output, and insert the new head from the 
 			//sublist into the Priority queue.
-
 		}
 		
 		/* Uncomment after completing the above while loop
-		for(int i=0; i<numChunks; i++)
+		for (int i = 0; i < numChunks; i++)
 			readers[i].close();
 		
 		out.close();
@@ -123,12 +127,12 @@ public class SortPost {
 		
 		BufferedWriter out = new BufferedWriter( new FileWriter(filename) );
 		
-		for(int i=0; i<chunk.length; i++) {
-			if(chunk[i] != null) {
+		for (int i = 0; i < chunk.length; i++) {
+			if (chunk[i] != null) {
 				out.write(chunk[i]);
 				out.newLine();
 			}
-		}
+		}	
 		
 		out.close();
 	}
@@ -139,11 +143,11 @@ public class SortPost {
 	}
 	
 	int compare(String a, String b) {
-		if(a==null && b==null)
+		if (a == null && b == null)
 			return 0;
-		if (a==null)
+		if (a == null)
 			return 1;
-		if (b==null)
+		if (b == null)
 			return -1;
 		return extractCol(a).compareTo(extractCol(b));
 	}
