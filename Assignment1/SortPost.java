@@ -44,10 +44,17 @@ public class SortPost {
 		String line;
 		int counter = 0;
 		
+		//Continue reading as long as there is input and counter is less than the size of sorted sublist
 		while ((line = in.readLine()) != null && counter < M) {
+			
+			//Fill in chunks with input from file
 			chunk[counter] = line;
+			
+			//If we have reached the allowed size of sorted sublist,
+			//sort and save the chunk as a file and reset the counter.
+			//Update file numbering, numChunks, and counter appropriately.
 			if (counter == M-1) {
-				sortAndSaveChunk(chunk, tmpfileprefix + cnt + ".txt");
+				sortAndSaveChunk(chunk, tmpfileprefix + cnt);
 				counter = -1;
 				cnt++;
 				numChunks++;
@@ -55,7 +62,7 @@ public class SortPost {
 			counter++;
 		}
 		//This line for testing only
-		System.out.println("numChunks is " + numChunks);
+		//System.out.println("numChunks is " + numChunks);
         
 		in.close();
 		
@@ -83,10 +90,12 @@ public class SortPost {
 		class HeadIndexPair { 
 			String head; 
 			int i; 
+			
 			HeadIndexPair(String head, int i) {
 				this.head = head;
 				this.i = i;
 			}
+			
 		}
 		
 		PriorityQueue<HeadIndexPair> heads = 
@@ -97,27 +106,38 @@ public class SortPost {
 		
 		BufferedWriter out = new BufferedWriter( new FileWriter(filename_out), B );
 		
-		for (int i = 0; i < numChunks; i++)
+		for (int i = 0; i < numChunks; i++) 
 			heads.add( new HeadIndexPair(readers[i].readLine(), i) ); 
 		
 		while (true) {
-			HeadIndexPair minh = heads.poll();
-			
 			//TODO: Complete the merge phase
 			//If what you get from poll is null, it means the sublists are exhausted, 
 			//so time to break from this while loop.
 			//Otherwise, add head to output, and insert the new head from the 
 			//sublist into the Priority queue.
+			
+			//Return head of the queue
+			HeadIndexPair minh = heads.poll();
+			
+			//If queue is empty, break out of the loop
+			if (minh.head == null)
+				break;
+			
+			//Write output to file
+			out.write(minh.head);
+			out.newLine();
+			
+			//Add a new head from the appropriate sublist
+			heads.add( new HeadIndexPair(readers[minh.i].readLine(), minh.i) );
 		}
 		
-		/* Uncomment after completing the above while loop
+		//Uncomment after completing the above while loop
 		for (int i = 0; i < numChunks; i++)
 			readers[i].close();
 		
 		out.close();
 		System.out.println("Phase 2 Time elapsed (sec) = " + (System.currentTimeMillis() - startTime) / 1000.0);
 		System.out.println("Sort complete");
-		*/
 	}
 	
 	void sortAndSaveChunk(String[] chunk, String filename) throws Exception {
@@ -161,10 +181,6 @@ public class SortPost {
 		//Testing chunks of 10 and sorting by column 0 (SIN)
 		//SortPost mysort = new SortPost("taxpayers_30.txt", "taxpayers_30_sorted.txt", 10, 8192, 0, "\t");
 		
-		// Testing chunks of 5 and sorting by column 3 (income)
-		SortPost mysort = new SortPost("taxpayers_30.txt", "taxpayers_30_sorted.txt", 5, 8192, 3, "\t");
-		
-		/*
 		//Only do this when you are sure the program works fine.
 		//The sort of such a file could take several minutes 
 		//depending on your machine (be patient). 
@@ -176,7 +192,6 @@ public class SortPost {
 				0,							//c, sort column 
 				"\t"						//sep, column separator
 				);
-		*/
 		
 		mysort.doSort();
 		
