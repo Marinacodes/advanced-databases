@@ -61,8 +61,6 @@ public class SortPost {
 			}
 			counter++;
 		}
-		//This line for testing only
-		//System.out.println("numChunks is " + numChunks);
         
 		in.close();
 		
@@ -131,7 +129,6 @@ public class SortPost {
 			heads.add( new HeadIndexPair(readers[minh.i].readLine(), minh.i) );
 		}
 		
-		//Uncomment after completing the above while loop
 		for (int i = 0; i < numChunks; i++)
 			readers[i].close();
 		
@@ -178,9 +175,6 @@ public class SortPost {
 		//taxpayers_30.txt is a file containing only 30 records. 
 		//This is to make sure your program works correctly. 
 		
-		//Testing chunks of 10 and sorting by column 0 (SIN)
-		//SortPost mysort = new SortPost("taxpayers_30.txt", "taxpayers_30_sorted.txt", 10, 8192, 0, "\t");
-		
 		//Only do this when you are sure the program works fine.
 		//The sort of such a file could take several minutes 
 		//depending on your machine (be patient). 
@@ -189,7 +183,7 @@ public class SortPost {
 				"taxpayers_3M_sorted.txt",	//output sorted file
 				300_000,					//M, size of chunk to sort in number of lines, also the size of a sorted sublist
 				8192, 						//B, size of buffer in characters (1 char = 2 bytes), if B==8192 char, it is 16K bytes
-				0,							//c, sort column 
+				3,							//c, sort column 
 				"\t"						//sep, column separator
 				);
 		
