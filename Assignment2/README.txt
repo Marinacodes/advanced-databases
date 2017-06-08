@@ -19,6 +19,8 @@ java -cp "../spark-2.1.0-bin-hadoop2.7/jars/*":bin MaxTemperature
   Windows:
 java -cp "../spark-2.1.0-bin-hadoop2.7/jars/*";bin MaxTemperature
 
+(if getting UnsatisfiedLinkError, try java -Djava.library.path="../hadoop-2.7.1/bin" -cp "../spark-2.1.0-bin-hadoop2.7/jars/*";bin MaxTemperature)
+
 MaxTemperature: 
   reads data from folder "input_weather" and 
   outputs results in "output_weather". 
