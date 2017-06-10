@@ -32,8 +32,8 @@ public class SparkMovielensGenresAvg {
     
     Map<String, String[]> movieGenres = new HashMap<>();
     
-	String localPath = SparkFiles.get("movies.csv");
-	System.out.println(localPath);
+	  String localPath = SparkFiles.get("movies.csv");
+	  System.out.println(localPath);
 	
     BufferedReader in = new BufferedReader(new FileReader(new File(localPath)));
     
@@ -43,18 +43,22 @@ public class SparkMovielensGenresAvg {
     
     JavaRDD<String> mRDD = sc.textFile("input_movielens"); //directory where the files are
     
-    JavaPairRDD<String, Tuple2<Double, Double>> mPairRDD = null; //TODO = ...    
+    JavaPairRDD<String, Tuple2<Double, Double>> mPairRDD = null; 
     
-    JavaPairRDD<String,Double> avgPairRDD = null; //TODO = ...
+    //TODO = ...    
     
-	//remove output directory if already there
-	FileSystem fs = FileSystem.get(sc.hadoopConfiguration());
-	fs.delete(new Path("output_movielens"), true); // delete dir, true for recursive
-	avgPairRDD.saveAsTextFile("output_movielens");
+    JavaPairRDD<String,Double> avgPairRDD = null; 
+    
+    //TODO = ...
+    
+	  //remove output directory if already there
+	  FileSystem fs = FileSystem.get(sc.hadoopConfiguration());
+	  fs.delete(new Path("output_movielens"), true); // delete dir, true for recursive
+	  avgPairRDD.saveAsTextFile("output_movielens");
 	
-	System.out.println("Done. See result in 'output_movielens'");
+  	System.out.println("Done. See result in 'output_movielens'");
     	
     sc.stop();
     sc.close();
-  }
+    }
 }

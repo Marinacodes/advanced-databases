@@ -59,10 +59,16 @@ public class MovielensGenreAvgMapper extends Mapper<LongWritable, Text, Text, Ma
 		
 		String[] genres = movieGenres.get(movieID); 
 		
+		MapWritable rating_map;
+		
 		for(String genre : genres) {
 			//TODO: emit a K,V pair for each genre. 
 			//K is genre
 			//V is a MapWritable containing rating and the number 1 (similar to MovielensAvg)
+			rating_map = new MapWritable();
+			rating_map.put( new Text("cnt"), new IntWritable(1) );
+			rating_map.put( new Text("sum"), new DoubleWritable(rating) );
+			context.write(new Text(genre), rating_map);
 		}
 	}
 }

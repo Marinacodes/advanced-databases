@@ -16,6 +16,18 @@ public class MovielensGenreAvgCombiner extends Reducer<Text, MapWritable, Text, 
 		
 		//TODO: the rest of the method. 
 		//Very similar to MovielensAvgCombiner
+
+		for (MapWritable value : values) {
+			cnt += ((IntWritable)(value.get(new Text("cnt")))).get();
+			sum += ((DoubleWritable)(value.get(new Text("sum")))).get();
+		}
+
+		MapWritable rating_map = new MapWritable();
+		
+		rating_map.put(new Text("cnt"), new IntWritable(cnt));
+		rating_map.put(new Text("sum"), new DoubleWritable(sum));
+		
+		context.write(key, rating_map);
 	}
 }
 
