@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,9 +87,7 @@ public class MedlineAnalysis_post {
 		    		.sortByKey();
 		    
 		    System.out.println("topic_cnt: frequency");
-		    cnt_freq.take(10).forEach( x -> System.out.println(x._1 + ": " + x._2) );
-		    
-		    
+		    cnt_freq.take(10).forEach( x -> System.out.println(x._1 + ": " + x._2) );		    
 		    
 		    //Cooccurence analysis
 		    JavaRDD<Tuple2<String,String>> topicPairs = 
@@ -120,7 +119,6 @@ public class MedlineAnalysis_post {
 	    	.take(10)
 	    	.forEach( x -> System.out.println(x._1 + ": " + x._2._1 + "|" + x._2._2) );
 
-
 		    //Degree analysis.
 		    //For each node find its degree (number of neighbors)
 		    System.out.println(
@@ -141,15 +139,12 @@ public class MedlineAnalysis_post {
 						result.add(new Tuple2<>(pc._1._1, pc._1._2));
 						result.add(new Tuple2<>(pc._1._2, pc._1._1));
 						return result.iterator();
-					});
-			
-			
+					});			
 		   
 		    //TODO Transform "edges" to "edges_1", namely, 
 		    //for each (u,v) in edges, map to (u,1)
 			JavaPairRDD<String,Integer> edges_1 = edges.mapToPair(
-					pc -> new Tuple2<>(pc._1, 1));
-				
+					pc -> new Tuple2<>(pc._1, 1));				
 		    
 		    //TODO Transform "edges_1" to an RDD of vertex-degree pairs.
 		    //Note that we could do that using countByKey() on edges, but 
@@ -173,15 +168,21 @@ public class MedlineAnalysis_post {
 		    //Sort in ascending order by degree.
 		    //Then, plot the frequency numbers in Excel. 
 		    //You should observe the "long-tail" phenomenon. 
-		    System.out.println("For each degree value, print number of vertices with this degree");
+		    System.out.println("Degree frequency analysis sorted in ascending order by degree is written to assignment4_output.csv");
 			JavaPairRDD<Integer,Integer> deg_frequency = vert_deg_rdd
 					.mapToPair(pc -> new Tuple2<>(pc._2, 1))
 					.reduceByKey((x,y) -> x+y);
-					
+			
+			PrintWriter pw = new PrintWriter(new File("assignment4_output.csv"));
+			StringBuilder sb = new StringBuilder();
+			
 			deg_frequency.mapToPair( pc->new Tuple2<>(pc._1,pc._2) )
-		    .sortByKey(true)
-	    	.take(1000)
-	    	.forEach( x -> System.out.print(x._1 + ": " + x._2 + "\t") );
+			.sortByKey(true)
+			.take(500)
+			.forEach( x -> sb.append(x._1 + "," + x._2 + '\n'));
+			
+			pw.write(sb.toString());
+			pw.close();
 					
 		    sc.stop();
 		    sc.close();
